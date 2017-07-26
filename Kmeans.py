@@ -3,6 +3,8 @@ import sys
 import csv
 import math
 import random
+import copy
+import argparse
 
 def read_csv_to_array(path, data):
     """Đọc file .cvs vào mảng data"""
@@ -66,9 +68,10 @@ def compute_distance(array_point, array_center):
 
 def compute_cnumber(array_point, array_center):
     """Tính và gán số lượng phần tử của mỗi tâm"""
-    count_point = 0
     count_center = 0
     for icenter in array_center:
+        icenter[1] = 0
+        count_point = 0
         count_center = count_center + 1
         for ipoint in array_point:
             count_point = count_point + 1
@@ -116,8 +119,8 @@ def check_stop_condition(old_arraycenter, new_array_center):
 
 
 if __name__ == "__main__":
-    path = "Data.csv"
-    k = 2
+    path = (str)(sys.argv[1])
+    k = (int)(sys.argv[2])
     data = []
     point = []
     center = []
@@ -130,7 +133,7 @@ if __name__ == "__main__":
     # print(array_point)
     get_first_center_to_array(k, data, array_center)
     # print(array_center)
-    old_arr_center = array_center
+    old_arr_center = copy.deepcopy(array_center)
     count_while = 0
     while True:
         count_while = count_while + 1
@@ -140,11 +143,14 @@ if __name__ == "__main__":
         # print(array_center)
         compute_cnumber(array_point, array_center)
         # print(array_center)
-        if(count_while > 5):
+        if(check_stop_condition(array_center, old_arr_center)):
             for ppoint in array_point:
                 print(ppoint[1])
             print(array_center)
-            print(count_while)
+            print("Number Loop: " + (str)(count_while))
+            print("Number of element: ")
+            for np in array_center:
+                print(np[1])
             break
         else:
-            old_arr_center = array_center
+            old_arr_center = copy.deepcopy(array_center)
