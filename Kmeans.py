@@ -5,6 +5,18 @@ import math
 import random
 import copy
 import argparse
+import os
+
+def get_list_path_csv(dir):
+    """Đọc đường dẫn tất cả file CSV trong thư mục dir"""
+    list_path = []
+    for root, dirs, files in os.walk(dir):
+        for file in files:
+            if file.endswith(".csv"):
+                # print(os.path.join(root, file))
+                list_path.append(os.path.join(root, file))
+
+    return list_path
 
 def read_csv_to_array(path, data):
     """Đọc file .cvs vào mảng data"""
@@ -117,17 +129,20 @@ def check_stop_condition(old_arraycenter, new_array_center):
     else:
         return False 
 
-
-if __name__ == "__main__":
-    path = (str)(sys.argv[1])
-    k = (int)(sys.argv[2])
+def run_kmeans(path_csv, k):
+    """Chạy Kmeans với mỗi file csv"""
     data = []
     point = []
     center = []
     array_center = []
     array_point = []
+    list_paths = []
+    class_list = []
+    file_name = (str)(path_csv.split(".")[0]) + "_class.csv"
+    print(file_name)
+    file_object  = open(file_name, "a") 
 
-    read_csv_to_array(path, data)
+    read_csv_to_array(path_csv, data)
     # print(data)
     get_first_point_to_array(data, array_point)
     # print(array_point)
@@ -146,6 +161,7 @@ if __name__ == "__main__":
         if(check_stop_condition(array_center, old_arr_center)):
             for ppoint in array_point:
                 print(ppoint[1])
+                file_object.write((str)(ppoint[1]) + "\n")
             print(array_center)
             print("Number Loop: " + (str)(count_while))
             print("Number of element: ")
@@ -154,3 +170,21 @@ if __name__ == "__main__":
             break
         else:
             old_arr_center = copy.deepcopy(array_center)
+    file_object.close()
+
+    return
+if __name__ == "__main__":
+    path = (str)(sys.argv[1])
+    k = (int)(sys.argv[2])
+    # path = "F:\Kmeans"
+    # k = 2
+
+    if(os.path.isdir(path)):
+        list_paths = get_list_path_csv(path)
+        print(list_paths)
+        for one_path in list_paths:
+            run_kmeans(one_path, k)
+    elif (os.path.isfile(path)):
+        run_kmeans(path, k)
+    else:
+        print("Input file .csv or directory to csv")
