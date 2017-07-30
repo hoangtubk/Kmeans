@@ -138,7 +138,7 @@ def run_kmeans(path_csv, k):
     array_point = []
     list_paths = []
     class_list = []
-    file_name = (str)(path_csv.split(".")[0]) + "_class.csv"
+    file_name = (str)(path_csv.split(" 80/")[1]) + "_class.csv"
     print(file_name)
     file_object  = open(file_name, "a") 
 
@@ -176,7 +176,7 @@ def run_kmeans(path_csv, k):
 if __name__ == "__main__":
     path = (str)(sys.argv[1])
     k = (int)(sys.argv[2])
-    # path = "F:\Kmeans"
+    # path = "/home/tuhoangbk/Documents/29.07.2017/Only 80"
     # k = 2
 
     if(os.path.isdir(path)):
